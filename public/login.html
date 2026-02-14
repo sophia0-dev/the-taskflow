@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | The Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- THEME: MIDNIGHT NAVY (Same as Dashboard/Signup) --- */
+        :root {
+            --bg-color: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #14b8a6; /* Teal for Login to distinguish from Signup */
+            --accent-glow: rgba(20, 184, 166, 0.4);
+            --error: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            /* Subtle different gradient for Login */
+            background-image: 
+                radial-gradient(circle at 80% 20%, rgba(20, 184, 166, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 25%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .header h1 { color: var(--text-primary); font-size: 1.8rem; margin-bottom: 5px; }
+        .header p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 30px; }
+
+        .input-group { margin-bottom: 20px; position: relative; }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            transition: 0.3s;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+        }
+
+        input:focus + i { color: var(--accent); }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            margin-top: 10px;
+        }
+
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
+
+        .links {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .links a { color: var(--text-secondary); text-decoration: none; transition: 0.3s; }
+        .links a:hover { color: var(--accent); }
+
+        /* Error Message (Hidden by default) */
+        .error-msg {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="header">
+            <h1>Welcome Back</h1>
+            <p>Enter your credentials to access the Hub</p>
+        </div>
+
+        <div class="error-msg" id="error-msg">
+            <i class="fas fa-exclamation-circle"></i> Invalid email or password
+        </div>
+
+        <form id="login-form">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Email Address" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+
+            <button type="submit" class="btn-login" id="login-btn">Sign In</button>
+        </form>
+
+        <div class="links">
+            <a href="signup.html">Create Account</a>
+            <a href="#">Forgot Password?</a>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const errorMsg = document.getElementById('error-msg');
+    const loginBtn = document.getElementById('login-btn');
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Show loading state
+    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+
+    try {
+        // --- FIX: USE THE FULL SERVER URL ---
+        const response = await fetch('http://localhost:3000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // SAVE THE USER ID AND NAME
+            localStorage.setItem('hubUserId', data.user.id); 
+            localStorage.setItem('hubUser', data.user.name);
+            window.location.href = "dashboard.html";
+        } else {
+            // Error handling
+            errorMsg.style.display = 'block';
+            errorMsg.innerText = data.message;
+            loginBtn.innerHTML = 'Sign In';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        // This alerts if the server is down or the URL is wrong
+        alert("Cannot connect to server. Is 'node server.js' running?");
+        loginBtn.innerHTML = 'Sign In';
+    }
+});
+</script>
+
+</body>
+</html>

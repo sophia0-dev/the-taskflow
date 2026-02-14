@@ -1,0 +1,217 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f2f5;
+    overflow: hidden; /* Prevents scrollbars from background blobs */
+}
+
+/* Vibrant Animated Background */
+.background-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%); 
+    z-index: -1;
+}
+
+/* Glassmorphism Card */
+.todo-container {
+    width: 100%;
+    max-width: 450px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    margin: 20px;
+}
+
+header {
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: #333;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+#date-display {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Input Area */
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+input[type="text"]:focus {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+#add-btn {
+    width: 50px;
+    height: 50px; /* Make it square/circle */
+    flex-shrink: 0; /* Prevent shrinking */
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex; /* Center icon */
+    align-items: center;
+    justify-content: center;
+}
+
+#add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+}
+
+/* Stats Row */
+.todo-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 15px;
+    padding: 0 5px;
+}
+
+#clear-completed {
+    background: none;
+    border: none;
+    color: #764ba2;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#clear-completed:hover {
+    text-decoration: underline;
+}
+
+/* Task List */
+.todo-list {
+    list-style: none;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px; /* Space for scrollbar */
+}
+
+/* Scrollbar Styling */
+.todo-list::-webkit-scrollbar {
+    width: 5px;
+}
+.todo-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.todo-item {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+    animation: slideIn 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.todo-item.completed {
+    background: #f8f9fa;
+    opacity: 0.7;
+}
+
+.todo-text {
+    flex: 1;
+    margin-left: 15px;
+    color: #444;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.todo-item.completed .todo-text {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+/* Custom Checkbox */
+.check-btn {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: 0.2s;
+}
+
+.todo-item.completed .check-btn {
+    background: #4caf50;
+    border-color: #4caf50;
+}
+
+/* Delete Button */
+.delete-btn {
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0;
+    transition: 0.2s;
+    padding: 5px;
+}
+
+.todo-item:hover .delete-btn {
+    opacity: 1;
+}
+
+.delete-btn:hover {
+    transform: scale(1.2);
+}

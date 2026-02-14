@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CGPA Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4A148C;
+            --accent: #FFD700;
+            --bg-gradient: linear-gradient(135deg, #4A148C 0%, #7B1FA2 100%);
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* --- DASHBOARD HEADER --- */
+        .dashboard-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            border-top: 5px solid var(--accent);
+        }
+
+        .cgpa-display {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .cgpa-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- CALCULATOR SECTION --- */
+        .calculator-box {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Adjusted to fit the scale selector */
+            gap: 10px;
+        }
+
+        /* Input Grids */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+        
+        /* New Scale Selector Style */
+        .scale-selector {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 8px;
+            background: transparent;
+            width: auto;
+            cursor: pointer;
+        }
+
+        /* Course Table */
+        .course-table-container {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .course-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .btn-add {
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .btn-add:hover { background: #d0d0d0; }
+
+        .btn-remove {
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover { background: #380d6b; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* --- HISTORY LIST --- */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid var(--accent);
+            animation: slideIn 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-info h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .result-info p {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .result-score {
+            text-align: right;
+        }
+
+        .gpa-badge {
+            background: var(--primary);
+            color: var(--accent);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .btn-delete-card {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #ff4444;
+            cursor: pointer;
+            opacity: 0.3;
+            font-size: 0.9rem;
+        }
+        .btn-delete-card:hover { opacity: 1; }
+
+        @media (max-width: 600px) {
+            .course-row { grid-template-columns: 1fr 1fr; }
+            .course-name { grid-column: span 2; }
+            .cgpa-display { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="dashboard-card">
+            <div class="cgpa-display" id="total-cgpa">0.00</div>
+            <div class="cgpa-label">Current Cumulative CGPA</div>
+        </div>
+
+        <div class="calculator-box">
+            <div class="section-title">
+                <span><i class="fas fa-calculator"></i> Calculate GPA</span>
+                
+                <select id="grading-scale" class="scale-selector" onchange="updateInfoText()">
+                    <option value="5">5.0 Scale (UNN/Standard)</option>
+                    <option value="4">4.0 Scale (US/Standard)</option>
+                    <option value="3">3.0 Scale</option>
+                </select>
+            </div>
+            <p id="scale-info" style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
+                Selected: A=5, B=4, C=3, D=2, E=1, F=0
+            </p>
+
+            <div class="details-grid">
+                <div class="form-group">
+                    <label>Session</label>
+                    <input type="text" id="session" placeholder="e.g. 2025/2026">
+                </div>
+                <div class="form-group">
+                    <label>Level</label>
+                    <select id="level">
+                        <option value="100">100 Level</option>
+                        <option value="200">200 Level</option>
+                        <option value="300">300 Level</option>
+                        <option value="400">400 Level</option>
+                        <option value="500">500 Level</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Semester</label>
+                    <select id="semester">
+                        <option value="1st">1st Semester</option>
+                        <option value="2nd">2nd Semester</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="course-table-container" id="course-container">
+                </div>
+
+            <div style="margin-bottom: 20px; text-align: center;">
+                <button class="btn-outline" onclick="addNewCourseRow()">
+                    <i class="fas fa-plus"></i> Add Course
+                </button>
+            </div>
+
+            <div class="actions">
+                <button class="btn-primary" onclick="calculateAndSave()">Calculate & Save Result</button>
+            </div>
+        </div>
+
+        <div class="calculator-box" style="background: transparent; box-shadow: none; padding: 0;">
+            <div class="section-title" style="color: white; border-color: rgba(255,255,255,0.2);">
+                <i class="fas fa-history"></i> Academic History
+            </div>
+            <div class="history-list" id="history-list">
+                </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. GET USER ID (Required to save data to the correct account)
+        const userId = localStorage.getItem('hubUserId');
+        if (!userId) window.location.href = 'login.html'; // Redirect if not logged in
+
+        // DOM Elements
+        const courseContainer = document.getElementById('course-container');
+        const historyList = document.getElementById('history-list');
+        const totalCgpaEl = document.getElementById('total-cgpa');
+        const scaleSelect = document.getElementById('grading-scale');
+        const scaleInfo = document.getElementById('scale-info');
+
+        // 2. DEFINE GRADING SYSTEMS
+        const gradeSystems = {
+            "5": { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 },
+            "4": { A: 4, B: 3, C: 2, D: 1, E: 0, F: 0 },
+            "3": { A: 3, B: 2, C: 1, D: 0, E: 0, F: 0 }
+        };
+
+        // Update info text when dropdown changes
+        function updateInfoText() {
+            const scale = scaleSelect.value;
+            const s = gradeSystems[scale];
+            let text = `Selected: A=${s.A}, B=${s.B}, C=${s.C}, D=${s.D}, F=${s.F}`;
+            if(scale === "5") text += `, E=${s.E}`; // 4.0 and 3.0 usually don't count E
+            scaleInfo.innerText = text;
+        }
+
+        // 3. LOAD HISTORY FROM SERVER
+        async function fetchHistory() {
+            try {
+                // If using the backend server
+                const res = await fetch(`/api/cgpa?userId=${userId}`);
+                const academicHistory = await res.json();
+                renderHistory(academicHistory);
+                calculateCumulative(academicHistory);
+            } catch (err) { 
+                console.error("Backend not connected, using local storage for demo");
+                // Fallback for demo purposes if server is offline
+                const localHistory = JSON.parse(localStorage.getItem('cgpaHistory')) || [];
+                renderHistory(localHistory);
+                calculateCumulative(localHistory);
+            }
+        }
+
+        // 4. SAVE NEW RESULT TO SERVER
+        async function calculateAndSave() {
+            const session = document.getElementById('session').value || 'Unknown';
+            const level = document.getElementById('level').value;
+            const semester = document.getElementById('semester').value;
+            const scale = scaleSelect.value;
+            const currentSystem = gradeSystems[scale];
+            
+            const rows = document.querySelectorAll('.course-row');
+
+            let totalUnits = 0;
+            let totalPoints = 0;
+            let courseCount = 0;
+
+            rows.forEach(row => {
+                const unit = parseFloat(row.querySelector('.course-unit').value);
+                // Get the LETTER grade (value="A", "B"...)
+                const gradeLetter = row.querySelector('.course-grade').value; 
+                
+                // Convert letter to number based on selected scale
+                const gradePoint = currentSystem[gradeLetter];
+
+                if (!isNaN(unit) && gradeLetter !== "") {
+                    totalUnits += unit;
+                    totalPoints += (unit * gradePoint);
+                    courseCount++;
+                }
+            });
+
+            if (courseCount === 0) return alert("Please add at least one valid course.");
+
+            const gpa = (totalPoints / totalUnits).toFixed(2);
+
+            // DATA OBJECT
+            const data = { userId, session, level, semester, totalUnits, totalPoints, gpa };
+
+            // Try sending to backend
+            try {
+                await fetch('/api/cgpa', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            } catch (e) {
+                // Fallback to local storage if server is down
+                const localHistory = JSON.parse(localStorage.getItem('cgpaHistory')) || [];
+                data.id = Date.now(); // fake ID
+                localHistory.push(data);
+                localStorage.setItem('cgpaHistory', JSON.stringify(localHistory));
+            }
+
+            alert(`GPA Calculated: ${gpa} (Scale: ${scale}.0)`);
+            
+            // Clear Inputs and Reload
+            courseContainer.innerHTML = '';
+            addNewCourseRow(); addNewCourseRow(); addNewCourseRow();
+            fetchHistory(); 
+        }
+
+        // 5. DELETE RESULT
+        async function deleteItem(id) {
+            if(confirm('Delete this result?')) {
+                try {
+                    await fetch(`/api/cgpa/${id}`, { method: 'DELETE' });
+                } catch(e) {
+                    // Fallback local delete
+                    let localHistory = JSON.parse(localStorage.getItem('cgpaHistory')) || [];
+                    localHistory = localHistory.filter(i => i.id !== id);
+                    localStorage.setItem('cgpaHistory', JSON.stringify(localHistory));
+                }
+                fetchHistory(); 
+            }
+        }
+
+        // Helper: Add Rows (Updated for Letter Grades)
+        function addNewCourseRow() {
+            const div = document.createElement('div');
+            div.className = 'course-row';
+            div.innerHTML = `
+                <input type="text" placeholder="Course" class="course-name">
+                <input type="number" placeholder="Units" class="course-unit" min="1" max="6">
+                <select class="course-grade">
+                    <option value="">Grade</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                </select>
+                <i class="fas fa-times btn-remove" onclick="this.parentElement.remove()"></i>
+            `;
+            courseContainer.appendChild(div);
+        }
+
+        // Helper: Render List
+        function renderHistory(history) {
+            historyList.innerHTML = '';
+            // Show newest first
+            const sorted = [...history].reverse();
+            
+            sorted.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'result-card';
+                // Handle snake_case (DB) vs camelCase (Local)
+                const tUnits = item.total_units || item.totalUnits;
+                const tPoints = item.total_points || item.totalPoints;
+                
+                div.innerHTML = `
+                    <div class="result-info">
+                        <h3>${item.level} Level - ${item.semester}</h3>
+                        <p>${item.session}</p>
+                        <p style="font-size: 0.8rem">Units: ${tUnits} | Points: ${tPoints}</p>
+                    </div>
+                    <div class="result-score"><div class="gpa-badge">${item.gpa}</div></div>
+                    <i class="fas fa-trash btn-delete-card" onclick="deleteItem(${item.id})"></i>
+                `;
+                historyList.appendChild(div);
+            });
+        }
+
+        // Helper: Calculate Total CGPA
+        function calculateCumulative(history) {
+            if (history.length === 0) { totalCgpaEl.innerText = "0.00"; return; }
+            let allPoints = 0, allUnits = 0;
+            history.forEach(item => { 
+                allPoints += (item.total_points || item.totalPoints); 
+                allUnits += (item.total_units || item.totalUnits); 
+            });
+            totalCgpaEl.innerText = (allPoints / allUnits).toFixed(2);
+        }
+
+        // Start
+        addNewCourseRow(); addNewCourseRow(); addNewCourseRow();
+        updateInfoText(); // Set initial text
+        fetchHistory();
+    </script>
+</body>
+</html>
