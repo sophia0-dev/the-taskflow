@@ -213,6 +213,7 @@ app.post('/api/quiz', (req, res) => {
 });
 
 // Start Server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+const PORT = process.env.PORT || 3000; // Use Render's port OR 3000 locally
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
