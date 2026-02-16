@@ -16,9 +16,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // --- DATABASE CONNECTION ---
 const db = mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',    
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'MYSQL/sophia_1', // Default XAMPP/MySQL password is often empty
+    host: process.env.DB_HOST || 'mysql-taskflow-thetask-flow123.j.aivencloud.com',    
+    user: process.env.DB_USER || 'avnadmin',
+    password: process.env.DB_PASSWORD || 'AVNS_ecePJMfmsffTPNv8WN81', 
     database: process.env.DB_NAME || 'hub_db',
     port: process.env.DB_PORT || 14846,// <--- CHANGED FROM 3000 TO 3306 and now to 14846
     ssl: {
@@ -220,5 +220,6 @@ const PORT = process.env.PORT || 3000; // Use Render's port OR 3000 locally
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
 
 
