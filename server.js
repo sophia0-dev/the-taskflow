@@ -20,7 +20,10 @@ const db = mysql.createConnection({
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'MYSQL/sophia_1', // Default XAMPP/MySQL password is often empty
     database: process.env.DB_NAME || 'hub_db',
-    port: process.env.DB_PORT || 3306 // <--- CHANGED FROM 3000 TO 3306
+    port: process.env.DB_PORT || 3306,// <--- CHANGED FROM 3000 TO 3306
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 db.connect((err) => {
@@ -217,3 +220,4 @@ const PORT = process.env.PORT || 3000; // Use Render's port OR 3000 locally
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
